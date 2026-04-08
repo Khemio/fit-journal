@@ -1,0 +1,29 @@
+<%inc
+#include "../models/journal.h"
+%>
+<%c++
+    auto journals=@@.get<std::vector<Journal>>("journals");
+%>
+
+<%c++ if(journals.size()>0){%>
+  <h2>Foods</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Journal name</th>
+        <th scope="col">Journal type</th>
+      </tr>
+    </thead>
+    <tbody id="journal-items">
+      <%c++ for(const auto& jr : journals){%>
+        <tr>
+          <th scope="row">{%jr.ID%}</th>
+          <td>{%jr.name%}</td>
+          <td>{%jr.type%}</td>
+        </tr>
+        <%c++}%>
+    </tbody>
+  </table>
+<%c++ }%>
