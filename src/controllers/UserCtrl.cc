@@ -40,9 +40,6 @@ Task<HttpResponsePtr> Users::SignIn(HttpRequestPtr req) {
             .password = bcrypt::generateHash(result[0][2].as<std::string>()) // Simulating hashed password from DB
         };
 
-        //  Use Argon2 or BCrypt in a real product.
-        // if (utils::getMd5("jadsjhdsajkh" + passwd) ==
-        // if (hash(passwd) == user.password)
         if (bcrypt::validatePassword(passwd,user.password))
         {
             req->session()->insert("loggedIn", true);
