@@ -1,16 +1,49 @@
+<%c++
+    auto page=@@.get<std::string>("page");
+%>
 
-<div id="login">
-    <form action="/users/signin" method="post">
-        <div class="container">
-            <label for="user"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="user" required>
-
-            <label for="passwd"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="passwd" required>
-
-            <button type="submit">Login</button>
+<div id="tabs" hx-target="#tabs" hx-swap="innerHTML">
+    <%c++ if(page == "signin") { %>
+        <div class="tab-list" role="tablist">
+            <button hx-get="/users/auth/signin" class="selected" role="tab" aria-selected="true" aria-controls="tab-content">Sign-in</button>
+            <button hx-get="/users/auth/signup" role="tab" aria-selected="false" aria-controls="tab-content">Sign-up</button>
         </div>
-    </form> 
 
-	<p>Please login with the credentials <br>Username: user<br>Password: password123</p>
+        <div id="tab-content" role="tabpanel" class="tab-content">
+            <div id="login">
+                <form action="/users/signin" method="post">
+                    <div class="container">
+                        <label for="user"><b>Username</b></label>
+                        <input type="text" placeholder="Enter Username" name="user" required>
+
+                        <label for="passwd"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="passwd" required>
+
+                        <button type="submit">Login</button>
+                    </div>
+                </form> 
+            </div>
+        </div>
+    <%c++ } else {%>
+        <div class="tab-list" role="tablist">
+            <button hx-get="/users/auth/signin" role="tab" aria-selected="false" aria-controls="tab-content">Sign-in</button>
+            <button hx-get="/users/auth/signup" class="selected" role="tab" aria-selected="true" aria-controls="tab-content">Sign-up</button>
+        </div>
+
+        <div id="tab-content" role="tabpanel" class="tab-content">
+            <div id="signup">
+                <form action="/users/signup" method="post">
+                    <div class="container">
+                        <label for="user"><b>Username</b></label>
+                        <input type="text" placeholder="Enter Username" name="user" required>
+
+                        <label for="passwd"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="passwd" required>
+
+                        <button type="submit">Signup</button>
+                    </div>
+                </form> 
+            </div>
+        </div>
+    <%c++ }%>
 </div>

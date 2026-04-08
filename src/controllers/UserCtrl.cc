@@ -4,14 +4,17 @@
 #include "../models/user.h"
 
 //? The better way of doing this might be through conditional templates
-void Users::Auth(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
-    bool loggedIn = req->session()->getOptional<bool>("loggedIn").value_or(false);
+void Users::Auth(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const std::string page) {
     HttpResponsePtr resp;
+    HttpViewData data;
+
+    bool loggedIn = req->session()->getOptional<bool>("loggedIn").value_or(false);
     if (loggedIn)
     {
         resp = HttpResponse::newHttpViewResponse("LogoutPage");
     } else {
-        resp = HttpResponse::newHttpViewResponse("LoginPage");
+        data.insert("page", page);
+        resp = HttpResponse::newHttpViewResponse("LoginPage", data);
     }
     callback(resp);
 }
