@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 INSERT INTO users (username, password) 
-    VALUES ('khemio', '123wa456tfc');
+    VALUES ('alex', '$2b$10$PM2LiLe6QoEHrVgLneFrW.cFL8M3JDzd4OtjX6on41VlcZA10TF0e'); -- qwerty
 
 INSERT INTO users (username, password) 
-    VALUES ('john', 'qwerty');
+    VALUES ('john', '$2b$10$PM2LiLe6QoEHrVgLneFrW.0CyT0uoxYTJB7bfXrZXgptU8RPAvH16'); -- password123
