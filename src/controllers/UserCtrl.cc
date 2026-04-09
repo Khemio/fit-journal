@@ -8,9 +8,14 @@ void Users::Auth(const HttpRequestPtr &req, std::function<void(const HttpRespons
     HttpResponsePtr resp;
     HttpViewData data;
 
+    // std::cout << "qwerty: " << bcrypt::generateHash("qwerty") << std::endl;
+    // std::cout << "password123: " << bcrypt::generateHash("password123") << std::endl;
+
     bool loggedIn = req->session()->getOptional<bool>("loggedIn").value_or(false);
     if (loggedIn)
     {
+        auto username = req->session()->getOptional<std::string>("username").value_or("");
+        std::cout << "username: " << username << std::endl;
         resp = HttpResponse::newHttpViewResponse("LogoutPage");
     } else {
         data.insert("page", page);
@@ -67,6 +72,8 @@ Task<HttpResponsePtr> Users::SignIn(HttpRequestPtr req) {
         if (bcrypt::validatePassword(passwd,user.password))
         {
             req->session()->insert("loggedIn", true);
+            req->session()->insert("ID", user.ID);
+            req->session()->insert("username", user.username);
             resp->setBody("<script>window.location.href = \"/\";</script>");
         } 
     }else {
@@ -79,6 +86,8 @@ Task<HttpResponsePtr> Users::SignIn(HttpRequestPtr req) {
 void Users::SignOut(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) {
     HttpResponsePtr resp = HttpResponse::newHttpResponse();
     req->session()->erase("loggedIn");
+    req->session()->erase("ID");
+    req->session()->erase("username");
     resp->setBody("<script>window.location.href = \"/\";</script>");
     callback(resp);
 }
