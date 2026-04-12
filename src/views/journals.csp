@@ -5,25 +5,26 @@
     auto journals=@@.get<std::vector<Journal>>("journals");
 %>
 
-<%c++ if(journals.size()>0){%>
-  <h2>Foods</h2>
+<div class="container">
+  <h2>Journals</h2>
 
-  <table>
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Journal name</th>
-        <th scope="col">Journal type</th>
-      </tr>
-    </thead>
-    <tbody id="journal-items">
+  <div class="container card-container">
+
+    <article id="new-item" class="card">
+          <div class="big-plus"></div>
+    </article>
+
+    <%c++ if(journals.size()>0){%>
+
       <%c++ for(const auto& jr : journals){%>
-        <tr>
-          <th scope="row">{%jr.ID%}</th>
-          <td>{%jr.name%}</td>
-          <td>{%jr.type%}</td>
-        </tr>
-        <%c++}%>
-    </tbody>
-  </table>
-<%c++ }%>
+        <article id="journal-item" class="card">
+          <!-- <div>{%jr.ID%}</div> -->
+          <h3>{%jr.name%}</h3>
+          <div>{%jr.type%}</div>
+        </article>
+      <%c++}%>
+
+    <%c++ }%>
+
+  </div>
+</div>
