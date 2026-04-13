@@ -1,5 +1,5 @@
 <%inc
-#include "../models/food.h"
+#include "../dto/food.h"
 %>
 
 <%c++

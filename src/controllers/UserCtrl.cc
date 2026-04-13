@@ -1,7 +1,7 @@
 #include "UserCtrl.h"
 #include "bcrypt-hash.h"
 
-#include "../models/user.h"
+#include "../dto/user.h"
 
 //? The better way of doing this might be through conditional templates
 void Users::Auth(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const std::string page) {

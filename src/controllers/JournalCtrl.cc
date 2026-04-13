@@ -1,8 +1,7 @@
 #include "JournalCtrl.h"
 
-#include "../models/journal.h"
+#include "../dto/journal.h"
 
-// Add definition of your processing function here
 Task<HttpResponsePtr> Journals::get_all(HttpRequestPtr req) {
     // HttpResponsePtr resp;
     HttpViewData data;

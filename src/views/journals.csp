@@ -1,5 +1,5 @@
 <%inc
-#include "../models/journal.h"
+#include "../dto/journal.h"
 %>
 <%c++
     auto journals=@@.get<std::vector<Journal>>("journals");
@@ -14,17 +14,18 @@
           <div class="big-plus"></div>
     </article>
 
-    <%c++ if(journals.size()>0){%>
+    <!-- <%c++ if(journals.size()>0){%> -->
 
       <%c++ for(const auto& jr : journals){%>
-        <article id="journal-item" class="card">
+        <article id="journal-item" class="card" 
+          hx-get="/journals/{%jr.ID%}>
           <!-- <div>{%jr.ID%}</div> -->
           <h3>{%jr.name%}</h3>
           <div>{%jr.type%}</div>
         </article>
       <%c++}%>
 
-    <%c++ }%>
+    <!-- <%c++ }%> -->
 
   </div>
 </div>

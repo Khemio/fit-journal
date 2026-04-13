@@ -1,6 +1,6 @@
 #include "FoodCtrl.h"
 
-#include "../models/food.h"
+#include "../dto/food.h"
 
 Task<std::vector<Food>> list_foods() {
     std::vector<Food> fds;
