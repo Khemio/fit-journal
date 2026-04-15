@@ -41,7 +41,7 @@ Task<HttpResponsePtr> Foods::get_all(HttpRequestPtr req) {
     data.insert("isFinal", false);
     data.insert("foods", fds);
 
-    auto resp = HttpResponse::newHttpViewResponse("foods.csp", data);
+    auto resp = HttpResponse::newHttpViewResponse("FoodsPage", data);
 
     co_return resp;
 }
@@ -68,7 +68,7 @@ Task<HttpResponsePtr> Foods::get_some(HttpRequestPtr req, std::string &&name) {
 
     data.insert("isFinal", false);
     data.insert("foods", fds);
-    auto resp = HttpResponse::newHttpViewResponse("foods_search.csp", data);
+    auto resp = HttpResponse::newHttpViewResponse("FoodList", data);
 
     co_return resp;
 }
@@ -97,7 +97,7 @@ Task<HttpResponsePtr> Foods::get_one(HttpRequestPtr req, unsigned long &&food_id
     data.insert("isFinal", true);
     data.insert("foods", fds);
     
-    auto resp = HttpResponse::newHttpViewResponse("foods_search.csp", data);
+    auto resp = HttpResponse::newHttpViewResponse("FoodList", data);
 
     co_return resp;
 }

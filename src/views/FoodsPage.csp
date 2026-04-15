@@ -1,0 +1,31 @@
+<%inc
+#include "../dto/food.h"
+%>
+
+<form hx-get="/foods/search"
+      hx-trigger="keyup changed delay:500ms, search, submit"
+      hx-target="#food-items"
+      hx-swap="innerHTML"
+      hx-indicator=".htmx-indicator">
+    <input class="form-control" type="search"
+      name="food_name" placeholder="Begin typing to search foods..."
+    >
+</form>
+<h2>Foods</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Food name</th>
+      <th scope="col">Food Quantity</th>
+      <th scope="col">Food Quantity Type</th>
+      <th scope="col">Protein</th>
+      <th scope="col">Calories</th>
+    </tr>
+  </thead>
+
+  <tbody id="food-items">
+    <%view FoodList %>
+  </tbody>
+
+</table>
