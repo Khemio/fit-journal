@@ -38,7 +38,7 @@ Task<HttpResponsePtr> Foods::get_all(HttpRequestPtr req) {
 
     auto fds = co_await list_foods();
 
-    data.insert("isFinal", true);
+    data.insert("isFinal", false);
     data.insert("foods", fds);
 
     auto resp = HttpResponse::newHttpViewResponse("foods.csp", data);
