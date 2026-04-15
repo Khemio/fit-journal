@@ -1,9 +1,6 @@
 <%inc
 #include "../dto/food.h"
 %>
-<%c++
-    auto foods=@@.get<std::vector<Food>>("foods");
-%>
 
 <form hx-get="/foods/search"
       hx-trigger="keyup changed delay:500ms, search, submit"
@@ -14,32 +11,21 @@
       name="food_name" placeholder="Begin typing to search foods..."
     >
 </form>
+<h2>Foods</h2>
 
-<%c++ if(foods.size()>0){%>
-  <h2>Foods</h2>
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Food name</th>
+      <th scope="col">Food Quantity</th>
+      <th scope="col">Food Quantity Type</th>
+      <th scope="col">Protein</th>
+      <th scope="col">Calories</th>
+    </tr>
+  </thead>
 
-  <table>
-    <thead>
-      <tr>
-        <!-- <th scope="col">ID</th> -->
-        <th scope="col">Food name</th>
-        <th scope="col">Food Quantity</th>
-        <th scope="col">Food Quantity Type</th>
-        <th scope="col">Protein</th>
-        <th scope="col">Calories</th>
-      </tr>
-    </thead>
-    <tbody id="food-items">
-      <%c++ for(const auto& fd : foods){%>
-        <tr hx-get="/foods/id/{%fd.ID%}" hx-target="#food-items" hx-swap="innerHTML">
-          <!-- <th scope="row">{%fd.ID%}</th> -->
-          <th scope="row">{%fd.name%}</th>
-          <td>{%fd.quantity%}</td>
-          <td>{%fd.quantity_type%}</td>
-          <td>{%fd.protein%}</td>
-          <td>{%fd.calories%}</td>
-        </tr>
-        <%c++}%>
-    </tbody>
-  </table>
-<%c++ }%>
+  <tbody id="food-items">
+    <%view foods_search%>
+  </tbody>
+
+</table>
