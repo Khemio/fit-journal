@@ -7,13 +7,19 @@
     //std::cout << "entries size in csp: " << entries.size() << std::endl;
 %>
 
-<div class="container">
+<div class="container"
+      id="entries-container"
+      hx-get="/journals/{%journal_id%}"
+      hx-trigger="itemAdded"
+      hx-swap="innerHTML"
+      hx-target="main">
+
   <h2>Food Journal</h2>
 
   <div class="container card-container">
 
     <article id="new-item" class="card">
-          <div class="big-plus"></div>
+          <div class="big-plus" data-target="new-entry-modal" hx-on:click="toggleModal(event)"></div>
     </article>
 
       <%c++ for(const auto& e : entries){%>
@@ -21,7 +27,6 @@
           hx-get="/journals/{%journal_id%}/{%e.entry_id%}"
           hx-swap="innerHTML"
           hx-target="main">
-          <!-- <div>[[journal_id]]</div> -->
           <h3>{%e.date%}</h3>
           <div>Total protein: {%e.total_protein%}</div>
           <div>Total calories: {%e.total_calories%}</div>
@@ -30,3 +35,39 @@
 
   </div>
 </div>
+
+<dialog id="new-entry-modal">
+    <article>
+        <header>
+            <button aria-label="Close" 
+                rel="prev"
+                data-target="new-entry-modal"
+                hx-on:click="toggleModal(event)"
+            ></button>
+            <p>
+                <strong>Choose the date for new entry</strong>
+            </p>
+        </header>
+        <p>
+            <form id="new-entry-form" hx-post="/journals/{%journal_id%}/new" hx-trigger="submit">
+              <input type="date" id="entry-date" name="entry-date" />
+            </form>
+        </p>
+        <footer>
+          <button 
+              data-target="new-entry-modal"
+              hx-on:click="toggleModal(event)"
+              role="button"
+              class="secondary">
+              Cancel
+          </button>
+          <button data-target="new-entry-modal" 
+              style="max-width: max-content"
+              form="new-entry-form"
+              type="submit"
+              hx-on:click="toggleModal(event)">
+              Add
+          </button>
+        </footer>
+    </article>
+</dialog>

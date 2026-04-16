@@ -51,7 +51,10 @@ Task<HttpResponsePtr> Journals::get_journal(HttpRequestPtr req, unsigned long &&
     // auto user_id = req->session()->getOptional<unsigned long>("ID").value_or(0);
     auto client = app().getDbClient();
 
-    auto result = co_await client->execSqlCoro("SELECT * FROM food_entries WHERE journal_id = $1;", journal_id);
+    auto query = R"(SELECT * FROM food_entries WHERE journal_id = $1
+                    ORDER BY entry_date DESC;)";
+
+    auto result = co_await client->execSqlCoro(query, journal_id);
 
     for (auto row : result) {
         Entry ent{
@@ -120,6 +123,39 @@ Task<HttpResponsePtr> Journals::get_entry(HttpRequestPtr req, unsigned long &&jo
     co_return resp;
 }
 
+Task<HttpResponsePtr> Journals::create_entry(HttpRequestPtr req, unsigned long &&journal_id) {
+    std::cout << "create_entry(" << journal_id << ")" << std::endl;
+    HttpResponsePtr resp = HttpResponse::newHttpResponse();
+
+    auto client = app().getDbClient();
+
+    try {
+        auto entry_date = req->getParameter("entry-date");
+        // auto entry_id = std::stoul(req->getParameter("entry-id"));
+        // std::cout << entry_date << std::endl;
+
+        float total_protein = 0;
+        float total_calories = 0;
+
+        auto query = R"(INSERT INTO food_entries (journal_id, entry_date, total_protein, total_calories)
+                        VALUES ($1, $2, $3, $4);)";
+
+        auto result = co_await client->execSqlCoro(query, journal_id, entry_date, total_protein, total_calories);
+
+        // std::cout << "rows affected: " << result.affectedRows() << std::endl;
+
+        std::string header = "{\"itemAdded\":{\"target\" : \"#entries-container\"}}";
+
+        resp->setStatusCode(k201Created);
+        resp->addHeader("HX-Trigger", header);
+    } catch (std::invalid_argument &e) {
+        resp->setStatusCode(k302Found);
+        resp->setBody("<script>alert('Failed to add: invalid input')</script>");
+    }
+
+    co_return resp;
+}
+
 Task<HttpResponsePtr> Journals::calc_food_item(HttpRequestPtr req, unsigned long &&food_id) {
     auto amount = std::stof(req->getParameter("amount"));
     std::cout << "calc_food_item(" << food_id << ')' << " with " << amount << std::endl;
@@ -161,28 +197,21 @@ Task<HttpResponsePtr> Journals::add_food_item(HttpRequestPtr req, unsigned long 
         auto entry_id = std::stoul(req->getParameter("entry-id"));
         auto row = (co_await client->execSqlCoro("SELECT * FROM foods WHERE food_id = ?;", food_id))[0];
 
-    // for (auto row : result) {
-        // Item it{
-            auto name = row[1].as<std::string>();
-            auto quantity = row[2].as<float>() * amount;
-            auto quantity_type = row[3].as<std::string>();
-            auto protein = row[4].as<float>() * amount;
-            auto calories = row[5].as<float>() * amount;
-        // };
-    // }
+        auto name = row[1].as<std::string>();
+        auto quantity = row[2].as<float>() * amount;
+        auto quantity_type = row[3].as<std::string>();
+        auto protein = row[4].as<float>() * amount;
+        auto calories = row[5].as<float>() * amount;
 
         auto query = R"(INSERT INTO food_entry_items 
             (entry_id, item_name, quantity, quantity_type, protein, calories)
             VALUES ($1, $2, $3, $4, $5, $6);)";
 
-    // INSERT INTO food_entry_items
         auto result = co_await client->execSqlCoro(query, entry_id, name, quantity, quantity_type, protein, calories);
 
         std::cout << "rows affected: " << result.affectedRows() << std::endl;
 
         std::string header = "{\"itemAdded\":{\"target\" : \"#entries-table\"}}";
-
-        std::cout << header << std::endl;
 
         resp->setStatusCode(k201Created);
         resp->addHeader("HX-Trigger", header);

@@ -13,7 +13,6 @@ struct Item {
     unsigned long item_id;
     unsigned long entry_id;
     std::string name;
-    // std::string type;
     float quantity;
     std::string quantity_type ;
     float protein;
