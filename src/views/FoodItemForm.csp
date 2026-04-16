@@ -7,7 +7,7 @@
 %>
 
 <div id="new-entry" hx-swap-oob="afterend:#food-table">
-<form id="entry-form" hx-post="/journals/new-food-item/add/{%fd.ID%}" hx-trigger="submit">
+<form id="entry-form" hx-post="/journals/new-food-item/add/{%fd.ID%}" hx-trigger="submit" hx-include="#entry-id">
 
   <div>
     <label for="amount">Amount</label>

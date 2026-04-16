@@ -17,7 +17,7 @@
     </article>
 
       <%c++ for(const auto& e : entries){%>
-        <article id="entry-item" class="card" 
+        <article id="entry-{%e.entry_id%}" class="card" 
           hx-get="/journals/{%journal_id%}/{%e.entry_id%}"
           hx-swap="innerHTML"
           hx-target="main">

@@ -94,7 +94,6 @@ Task<HttpResponsePtr> Journals::get_entry(HttpRequestPtr req, unsigned long &&jo
                 .item_id = row[0].as<unsigned long>(),
                 .entry_id = row[1].as<unsigned long>(),
                 .name = row[2].as<std::string>(),
-                // .type = row[3].as<std::string>(),
                 .quantity = row[3].as<float>(),
                 .quantity_type = row[4].as<std::string>(),
                 .protein = row[5].as<float>(),
@@ -155,13 +154,41 @@ Task<HttpResponsePtr> Journals::add_food_item(HttpRequestPtr req, unsigned long 
     std::cout << "add_food_item(" << food_id << ")" << std::endl;
     HttpResponsePtr resp = HttpResponse::newHttpResponse();
 
+    auto client = app().getDbClient();
+
     try {
         auto amount = std::stof(req->getParameter("amount"));
-        std::cout << "add_food_item(" << food_id << ')' << " with " << amount << std::endl;
+        auto entry_id = std::stoul(req->getParameter("entry-id"));
+        auto row = (co_await client->execSqlCoro("SELECT * FROM foods WHERE food_id = ?;", food_id))[0];
+
+    // for (auto row : result) {
+        // Item it{
+            auto name = row[1].as<std::string>();
+            auto quantity = row[2].as<float>() * amount;
+            auto quantity_type = row[3].as<std::string>();
+            auto protein = row[4].as<float>() * amount;
+            auto calories = row[5].as<float>() * amount;
+        // };
+    // }
+
+        auto query = R"(INSERT INTO food_entry_items 
+            (entry_id, item_name, quantity, quantity_type, protein, calories)
+            VALUES ($1, $2, $3, $4, $5, $6);)";
+
+    // INSERT INTO food_entry_items
+        auto result = co_await client->execSqlCoro(query, entry_id, name, quantity, quantity_type, protein, calories);
+
+        std::cout << "rows affected: " << result.affectedRows() << std::endl;
+
+        std::string header = "{\"itemAdded\":{\"target\" : \"#entries-table\"}}";
+
+        std::cout << header << std::endl;
+
         resp->setStatusCode(k201Created);
+        resp->addHeader("HX-Trigger", header);
     } catch (std::invalid_argument &e) {
         resp->setStatusCode(k302Found);
-        resp->setBody("<script>alert('Failed to add: invalid amount')</script>");
+        resp->setBody("<script>alert('Failed to add: invalid input')</script>");
     }
 
     co_return resp;
