@@ -6,19 +6,25 @@
   auto isFinal=@@.get<bool>("isFinal");
   auto foods=@@.get<std::vector<Food>>("foods");
 %>
+<tbody id="food-items">
+  <%c++ for(const auto& fd : foods){%>
+    <%c++ if(isFinal){%>
+      <tr>  
+    <%c++ } else {%>
+      <tr hx-get="/foods/id/{%fd.ID%}" 
+        hx-target="#food-items" 
+        hx-swap="outerHTML">
+    <%c++ }%>
 
-<%c++ for(const auto& fd : foods){%>
+      <th scope="row">{%fd.name%}</th>
+      <td>{%fd.quantity%} {%fd.quantity_type%}</td>
+      <td>{%fd.protein%} g</td>
+      <td>{%fd.calories%}</td>
+
+    </tr>
+  <%c++}%>
+</tbody>
+
 <%c++ if(isFinal){%>
-  <tr>  
-<%c++ } else {%>
-  <tr hx-get="/foods/id/{%fd.ID%}" hx-target="#food-items" hx-swap="innerHTML">
-<%c++ }%>
-
-    <th scope="row">{%fd.name%}</th>
-    <td>{%fd.quantity%}</td>
-    <td>{%fd.quantity_type%}</td>
-    <td>{%fd.protein%}</td>
-    <td>{%fd.calories%}</td>
-
-  </tr>
-<%c++}%>
+  <%view food_item %>
+<%c++ } %>
