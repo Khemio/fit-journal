@@ -26,5 +26,5 @@
 </tbody>
 
 <%c++ if(isFinal){%>
-  <%view food_item %>
+  <%view FoodItemForm %>
 <%c++ } %>

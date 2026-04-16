@@ -1,0 +1,81 @@
+<%inc
+#include <math.h>
+#include "../dto/food_journal_entry.h"
+%>
+<%c++
+    int total_protein = std::round(@@.get<float>("total_protein"));
+    int total_calories = std::round(@@.get<float>("total_calories"));
+    auto items = @@.get<std::vector<Item>>("items");
+%>
+
+  <nav>
+    <ul>
+        <li><h2>Foods</h2></li>
+    </ul>
+    <ul>
+        <li><span>Total Protein: {%total_protein%}g</span></li>
+        <li><span>Total Calories: {%total_calories%}</span></li>
+    </ul>
+    
+    <ul>
+        <li><button data-target="new-entry-modal" hx-on:click="toggleModal(event)">+</button></li>
+    </ul>
+  </nav>
+
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Food name</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Protein</th>
+        <th scope="col">Calories</th>
+      </tr>
+    </thead>
+    <tbody id="food-entries">
+      <%c++ for(const auto& fd : items){%>
+        <tr>
+          <th scope="row">{%fd.name%}</th>
+          <td>{%fd.quantity%} {%fd.quantity_type%}</td>
+          <td>{%fd.protein%}g</td>
+          <td>{%fd.calories%}</td>
+        </tr>
+        <%c++}%>
+    </tbody>
+  </table>
+
+  <form id="new-entry-form"></form>
+
+  <dialog id="new-entry-modal">
+    <article>
+        <header>
+            <button aria-label="Close" 
+                rel="prev"
+                data-target="new-entry-modal"
+                hx-on:click="toggleModal(event)"
+            ></button>
+            <p>
+                <strong>Choose the food to add</strong>
+            </p>
+        </header>
+        <p>
+            <%view FoodPage %>
+        </p>
+         <footer>
+            <button 
+                data-target="new-entry-modal"
+                hx-on:click="toggleModal(event)"
+                role="button"
+                class="secondary">
+                Cancel
+            </button>
+            <button data-target="new-entry-modal" 
+                style="max-width: max-content"
+                form="entry-form"
+                type="submit"
+                hx-on:click="toggleModal(event)">
+                Add
+            </button>
+        </footer>
+    </article>
+</dialog>
+

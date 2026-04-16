@@ -1,6 +1,7 @@
 #include "JournalCtrl.h"
 
 #include "../dto/journal.h"
+#include "../dto/food.h"
 #include "../dto/food_journal_entry.h"
 
 //TODO: Add authentication for DB rows
@@ -37,7 +38,7 @@ Task<HttpResponsePtr> Journals::get_all(HttpRequestPtr req) {
 
     data.insert("journals", jrs);
 
-    auto resp = HttpResponse::newHttpViewResponse("journals", data);
+    auto resp = HttpResponse::newHttpViewResponse("JournalPage", data);
 
     co_return resp;
 }
@@ -68,15 +69,18 @@ Task<HttpResponsePtr> Journals::get_journal(HttpRequestPtr req, unsigned long &&
     data.insert("journal_id", journal_id);
     data.insert("entries", ents);
 
-    auto resp = HttpResponse::newHttpViewResponse("journal_entries", data);
+    auto resp = HttpResponse::newHttpViewResponse("FoodJournal", data);
 
     co_return resp;
 }
 
 Task<HttpResponsePtr> Journals::get_entry(HttpRequestPtr req, unsigned long &&journal_id, unsigned long &&entry_id) {
     std::cout << "journals: get_entry()" << std::endl;
+
     HttpViewData data;
     std::vector<Item> items;
+    float tp = 0;
+    float tc = 0;
 
     // auto user_id = req->session()->getOptional<unsigned long>("ID").value_or(0);
     auto client = app().getDbClient();
@@ -97,6 +101,9 @@ Task<HttpResponsePtr> Journals::get_entry(HttpRequestPtr req, unsigned long &&jo
                 .calories = row[6].as<float>(),
             };
 
+            tp += item.protein;
+            tc += item.calories;
+
             items.push_back(item);
         }
     } catch (orm::DrogonDbException &e) {
@@ -105,9 +112,57 @@ Task<HttpResponsePtr> Journals::get_entry(HttpRequestPtr req, unsigned long &&jo
 
     data.insert("journal_id", journal_id);
     data.insert("entry_id", entry_id);
+    data.insert("total_protein", tp);
+    data.insert("total_calories", tc);
     data.insert("items", items);
 
-    auto resp = HttpResponse::newHttpViewResponse("food_journal_entry", data);
+    auto resp = HttpResponse::newHttpViewResponse("FoodJournalEntry", data);
+
+    co_return resp;
+}
+
+Task<HttpResponsePtr> Journals::calc_food_item(HttpRequestPtr req, unsigned long &&food_id) {
+    auto amount = std::stof(req->getParameter("amount"));
+    std::cout << "calc_food_item(" << food_id << ')' << " with " << amount << std::endl;
+    HttpViewData data;
+
+    std::vector<Food> fds;
+    auto client = app().getDbClient();
+
+    auto result = co_await client->execSqlCoro("SELECT * FROM foods WHERE food_id = ?;", food_id);
+
+    for (auto row : result) {
+        Food fd{
+            .ID = row[0].as<unsigned long>(),
+            .name = row[1].as<std::string>(),
+            .quantity = row[2].as<float>() * amount,
+            .quantity_type = row[3].as<std::string>(),
+            .protein = row[4].as<float>() * amount,
+            .calories = row[5].as<float>() * amount
+        };
+        fds.push_back(fd);
+    }
+
+    data.insert("isFinal", true);
+    data.insert("foods", fds);
+    
+    auto resp = HttpResponse::newHttpViewResponse("FoodList", data);
+
+    co_return resp;
+}
+
+Task<HttpResponsePtr> Journals::add_food_item(HttpRequestPtr req, unsigned long &&food_id) {
+    std::cout << "add_food_item(" << food_id << ")" << std::endl;
+    HttpResponsePtr resp = HttpResponse::newHttpResponse();
+
+    try {
+        auto amount = std::stof(req->getParameter("amount"));
+        std::cout << "add_food_item(" << food_id << ')' << " with " << amount << std::endl;
+        resp->setStatusCode(k201Created);
+    } catch (std::invalid_argument &e) {
+        resp->setStatusCode(k302Found);
+        resp->setBody("<script>alert('Failed to add: invalid amount')</script>");
+    }
 
     co_return resp;
 }

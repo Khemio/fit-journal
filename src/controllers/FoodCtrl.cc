@@ -41,7 +41,7 @@ Task<HttpResponsePtr> Foods::get_all(HttpRequestPtr req) {
     data.insert("isFinal", false);
     data.insert("foods", fds);
 
-    auto resp = HttpResponse::newHttpViewResponse("FoodsPage", data);
+    auto resp = HttpResponse::newHttpViewResponse("FoodPage", data);
 
     co_return resp;
 }

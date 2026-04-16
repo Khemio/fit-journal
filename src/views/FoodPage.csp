@@ -22,7 +22,6 @@
     </tr>
   </thead>
 
-  <!-- <tbody id="food-items"> -->
-    <%view FoodList %>
+  <%view FoodList %>
 
 </table>
