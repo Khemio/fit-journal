@@ -38,16 +38,20 @@ Task<HttpResponsePtr> Users::SignUp(HttpRequestPtr req) {
             user, bcrypt::generateHash(passwd));
 
         resp->setStatusCode(k201Created);
-        resp->setBody("<script>window.location.href = \"/\";</script>");
+        resp->addHeader("HX-Location", "/");
+        // resp->setBody("<script>window.location.href = \"/\";</script>");
 
     } catch (const orm::SqlError &e) {
+        //TODO: Add better error messaging for client because HTMX ignores body for 4XX and 5XX responses
         if (e.extendedErrcode() == 2067) {
             resp->setStatusCode(k409Conflict);
-            resp->setBody("<script>window.location.href = \"/\";alert('Username taken');</script>");
+            resp->addHeader("HX-Location", "/");
+            // resp->setBody("<script>window.location.href = \"/\";alert('Username taken');</script>");
             co_return resp;
         }
         resp->setStatusCode(k500InternalServerError);
-        resp->setBody("<script>window.location.href = \"/\";alert('Something went wrong');</script>");
+        resp->addHeader("HX-Location", "/");
+        // resp->setBody("<script>window.location.href = \"/\";alert('Something went wrong');</script>");
     }
 
     co_return resp;
