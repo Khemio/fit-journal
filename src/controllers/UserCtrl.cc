@@ -15,8 +15,8 @@ void Users::Auth(const HttpRequestPtr &req, std::function<void(const HttpRespons
     if (loggedIn)
     {
         auto username = req->session()->getOptional<std::string>("username").value_or("");
-        std::cout << "username: " << username << std::endl;
-        resp = HttpResponse::newHttpViewResponse("LogoutPage");
+        data.insert("username", username);
+        resp = HttpResponse::newHttpViewResponse("LogoutPage", data);
     } else {
         data.insert("page", page);
         resp = HttpResponse::newHttpViewResponse("LoginPage", data);
