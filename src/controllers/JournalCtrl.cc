@@ -25,13 +25,7 @@ Task<HttpResponsePtr> Journals::get_all(HttpRequestPtr req) {
     //? Add more info to the journal (Last Entrie Date, Avg stats, etc.)
 
     for (auto row : result) {
-        Journal jr{
-            .ID = row[0].as<unsigned long>(),
-            .owner_id = row[1].as<unsigned long>(),
-            .is_active = row[2].as<bool>(),
-            .type = row[3].as<std::string>(),
-        };
-
+        Journal jr{row};
         jrs.push_back(jr);
     }
 
@@ -55,14 +49,7 @@ Task<HttpResponsePtr> Journals::get_journal(HttpRequestPtr req, unsigned long &&
     auto result = co_await client->execSqlCoro(query, journal_id);
 
     for (auto row : result) {
-        Entry ent{
-            .entry_id = row[0].as<unsigned long>(),
-            .journal_id = row[1].as<unsigned long>(),
-            .date = row[2].as<std::string>(),
-            .total_protein = row[3].as<float>(),
-            .total_calories = row[4].as<float>(),
-        };
-
+        Entry ent{row};
         ents.push_back(ent);
     }
 
@@ -90,15 +77,7 @@ Task<HttpResponsePtr> Journals::get_entry(HttpRequestPtr req, unsigned long &&jo
         auto result = co_await client->execSqlCoro("SELECT * FROM food_entry_items WHERE entry_id = $1;", entry_id);
 
         for (auto row : result) {
-            Item item{
-                .item_id = row[0].as<unsigned long>(),
-                .entry_id = row[1].as<unsigned long>(),
-                .name = row[2].as<std::string>(),
-                .quantity = row[3].as<float>(),
-                .quantity_type = row[4].as<std::string>(),
-                .protein = row[5].as<float>(),
-                .calories = row[6].as<float>(),
-            };
+            Item item{row};
 
             tp += item.protein;
             tc += item.calories;
@@ -162,14 +141,7 @@ Task<HttpResponsePtr> Journals::calc_food_item(HttpRequestPtr req, unsigned long
     auto result = co_await client->execSqlCoro("SELECT * FROM foods WHERE food_id = ?;", food_id);
 
     for (auto row : result) {
-        Food fd{
-            .ID = row[0].as<unsigned long>(),
-            .name = row[1].as<std::string>(),
-            .quantity = row[2].as<float>() * amount,
-            .quantity_type = row[3].as<std::string>(),
-            .protein = row[4].as<float>() * amount,
-            .calories = row[5].as<float>() * amount
-        };
+        Food fd{row, amount};
         fds.push_back(fd);
     }
 

@@ -39,7 +39,6 @@ Task<HttpResponsePtr> Users::SignUp(HttpRequestPtr req) {
 
         resp->setStatusCode(k201Created);
         resp->addHeader("HX-Location", "/");
-        // resp->setBody("<script>window.location.href = \"/\";</script>");
 
     } catch (const orm::SqlError &e) {
         //TODO: Add better error messaging for client because HTMX ignores body for 4XX and 5XX responses
@@ -66,12 +65,7 @@ Task<HttpResponsePtr> Users::SignIn(HttpRequestPtr req) {
     auto result = co_await client->execSqlCoro("SELECT * FROM users WHERE username = ?;", user);
 
     if (result.size() > 0) { //? Size probably should be 1 for a singular row
-        User user{
-            .ID = result[0][0].as<unsigned long>(),
-            .username = result[0][1].as<std::string>(),
-            .password = result[0][2].as<std::string>()
-            // .password = bcrypt::generateHash(result[0][2].as<std::string>()) // Simulating hashed password from DB
-        };
+        User user{result[0]};
 
         if (bcrypt::validatePassword(passwd,user.password))
         {

@@ -9,15 +9,7 @@ Task<std::vector<Food>> list_foods() {
     auto result = co_await client->execSqlCoro("SELECT * FROM foods;");
 
     for (auto row : result) {
-        Food fd{
-            .ID = row[0].as<unsigned long>(),
-            .name = row[1].as<std::string>(),
-            .quantity = row[2].as<float>(),
-            .quantity_type = row[3].as<std::string>(),
-            .protein = row[4].as<float>(),
-            .calories = row[5].as<float>()
-        };
-
+        Food fd{row};
         fds.push_back(fd);
     }
 
@@ -47,14 +39,7 @@ Task<HttpResponsePtr> Foods::get_some(HttpRequestPtr req, std::string &&name) {
     auto result = co_await client->execSqlCoro("SELECT * FROM foods WHERE food_name LIKE ?;", '%' + name + '%');
 
     for (auto row : result) {
-        Food fd{
-            .ID = row[0].as<unsigned long>(),
-            .name = row[1].as<std::string>(),
-            .quantity = row[2].as<float>(),
-            .quantity_type = row[3].as<std::string>(),
-            .protein = row[4].as<float>(),
-            .calories = row[5].as<float>()
-        };
+        Food fd{row};
         fds.push_back(fd);
     }
 
@@ -75,14 +60,7 @@ Task<HttpResponsePtr> Foods::get_one(HttpRequestPtr req, unsigned long &&food_id
     auto result = co_await client->execSqlCoro("SELECT * FROM foods WHERE food_id = ?;", food_id);
 
     for (auto row : result) {
-        Food fd{
-            .ID = row[0].as<unsigned long>(),
-            .name = row[1].as<std::string>(),
-            .quantity = row[2].as<float>(),
-            .quantity_type = row[3].as<std::string>(),
-            .protein = row[4].as<float>(),
-            .calories = row[5].as<float>()
-        };
+        Food fd{row};
         fds.push_back(fd);
     }
 
