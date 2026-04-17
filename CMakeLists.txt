@@ -38,6 +38,13 @@ aux_source_directory(src/plugins PLUGIN_SRC)
 aux_source_directory(src/models MODEL_SRC)
 aux_source_directory(${CMAKE_CURRENT_BINARY_DIR}/views_gen VIEWS_GEN_SRC)
 
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_CURRENT_SOURCE_DIR}/static
+            ${CMAKE_CURRENT_BINARY_DIR}/static
+)
+
 drogon_create_views(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/views
                     ${CMAKE_CURRENT_BINARY_DIR}/views_gen)
 # use the following line to create views with namespaces.

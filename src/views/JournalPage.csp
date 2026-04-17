@@ -1,0 +1,24 @@
+<%inc
+#include "../dto/journal.h"
+%>
+<%c++
+    auto journals=@@.get<std::vector<Journal>>("journals");
+%>
+
+<div class="container">
+  <h2>Journals</h2>
+
+  <div class="container card-container">
+
+      <%c++ for(const auto& jr : journals){%>
+        <article id="journal-item" class="card" 
+          hx-get="/journals/{%jr.ID%}"
+          hx-swap="innerHTML"
+          hx-target="main">
+          <h3 style="text-transform: capitalize;">{%jr.type%} Journal</h3>
+          <div>Journal type: {%jr.type%}</div>
+        </article>
+      <%c++}%>
+
+  </div>
+</div>

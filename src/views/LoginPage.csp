@@ -2,48 +2,41 @@
     auto page=@@.get<std::string>("page");
 %>
 
-<div id="tabs" hx-target="#tabs" hx-swap="innerHTML">
-    <%c++ if(page == "signin") { %>
-        <div class="tab-list" role="tablist">
-            <button hx-get="/users/auth/signin" class="selected" role="tab" aria-selected="true" aria-controls="tab-content">Sign-in</button>
-            <button hx-get="/users/auth/signup" role="tab" aria-selected="false" aria-controls="tab-content">Sign-up</button>
-        </div>
+<%c++ if(page == "signin") { %>
+    <div id="title" hx-swap-oob="true">
+        <h2>Sign-in</h2>
+    </div>
 
-        <div id="tab-content" role="tabpanel" class="tab-content">
-            <div id="login">
-                <form action="/users/signin" method="post">
-                    <div class="container">
-                        <label for="user"><b>Username</b></label>
-                        <input type="text" placeholder="Enter Username" name="user" required>
+    <div id="auth-btn" hx-swap-oob="true">
+        <button hx-get="/users/auth/signup" hx-target="main" hx-swap="innerHTML">Sign-up</button>
+    </div>
 
-                        <label for="passwd"><b>Password</b></label>
-                        <input type="password" placeholder="Enter Password" name="passwd" required>
+    <div id="login">
+        <form action="/users/signin" method="post">
+            <fieldset role="group" class="container">
+                <input type="text" placeholder="Username" name="user" required>
+                <input type="password" placeholder="Password" name="passwd" required>
 
-                        <button type="submit">Login</button>
-                    </div>
-                </form> 
-            </div>
-        </div>
-    <%c++ } else {%>
-        <div class="tab-list" role="tablist">
-            <button hx-get="/users/auth/signin" role="tab" aria-selected="false" aria-controls="tab-content">Sign-in</button>
-            <button hx-get="/users/auth/signup" class="selected" role="tab" aria-selected="true" aria-controls="tab-content">Sign-up</button>
-        </div>
+                <button type="submit">Login</button>
+            </fieldset role="group">
+        </form> 
+    </div>
+<%c++ } else {%>
+    <div id="title" hx-swap-oob="true">
+        <h2>Sign-up</h2>
+    </div>
+    <div id="auth-btn" hx-swap-oob="true">
+        <button hx-get="/users/auth/signin" hx-target="main" hx-swap="innerHTML">Sign-in</button>
+    </div>
 
-        <div id="tab-content" role="tabpanel" class="tab-content">
-            <div id="signup">
-                <form action="/users/signup" method="post">
-                    <div class="container">
-                        <label for="user"><b>Username</b></label>
-                        <input type="text" placeholder="Enter Username" name="user" required>
+    <div id="signup">
+        <form action="/users/signup" method="post">
+            <fieldset role="group" class="container">
+                <input type="text" placeholder="Username" name="user" required>
+                <input type="password" placeholder="Password" name="passwd" required>
 
-                        <label for="passwd"><b>Password</b></label>
-                        <input type="password" placeholder="Enter Password" name="passwd" required>
-
-                        <button type="submit">Signup</button>
-                    </div>
-                </form> 
-            </div>
-        </div>
-    <%c++ }%>
-</div>
+                <button type="submit">Signup</button>
+            </fieldset role="group">
+        </form> 
+    </div>
+<%c++ }%>

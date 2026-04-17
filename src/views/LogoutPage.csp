@@ -1,9 +1,9 @@
-<div id="logout">
-	<form action="/users/signout" method="post">
-		<div class="container">
-			<button type="submit">Logout</button>
-		</div>
-	</form> 
 
-	<p>You can logout now</p>
+<div id="title" hx-swap-oob="true">
+	<h2>[[username]]</h2>
 </div>
+
+<div id="auth-btn" hx-swap-oob="true">
+	<button hx-post="/users/signout">Logout</button>
+</div>
+

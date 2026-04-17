@@ -1,0 +1,29 @@
+<%inc
+#include "../dto/food.h"
+%>
+
+<%c++
+  auto fd=@@.get<std::vector<Food>>("foods")[0];
+%>
+
+<div id="new-entry" hx-swap-oob="afterend:#food-table">
+<form id="entry-form" hx-post="/journals/food-item/add/{%fd.ID%}" hx-trigger="submit" hx-include="#entry-id">
+
+  <div>
+    <label for="amount">Amount</label>
+    <input type="number" id="amount" name="amount" min="0"
+      form="entry-form"
+      value="0"
+      step="0.01"
+      hx-preserve
+      hx-target="#food-items"
+      hx-select="#food-items"
+      hx-swap="outerHTML"
+      hx-post="journals/food-item/calc/{%fd.ID%}"
+      hx-trigger="keyup changed delay:500ms"
+      hx-select-oob="#new-entry"
+      >
+  </div>
+    
+</form> 
+</div>

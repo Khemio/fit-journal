@@ -3,7 +3,6 @@
 struct Journal {
     unsigned long ID;
     unsigned long owner_id;
-    std::string name;
-    std::string type ;
-    std::string description ;
+    bool is_active;
+    std::string type;
 };

@@ -1,0 +1,33 @@
+.card-container {
+    display: flex;
+    gap: 2rem;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    max-width: max-content;
+    text-align: center;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+}
+
+.big-plus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 0;
+    width: 0;
+    font-size: 25px; /* Adjust size here */
+    text-align:center;
+    line-height: 1em;
+    margin: auto;
+    padding: 0;
+    color: #ffffff;
+    /* background-color: #000000; */
+  }
+
+  .big-plus::before {
+    display: block;
+    content: "\2795";
+  }
