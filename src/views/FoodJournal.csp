@@ -4,7 +4,6 @@
 <%c++    
     auto journal_id=@@.get<unsigned long>("journal_id");
     auto entries=@@.get<std::vector<Entry>>("entries");
-    //std::cout << "entries size in csp: " << entries.size() << std::endl;
 %>
 
 <div class="container"

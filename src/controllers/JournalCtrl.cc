@@ -20,7 +20,7 @@ Task<HttpResponsePtr> Journals::get_all(HttpRequestPtr req) {
 
     auto user_id = req->session()->getOptional<unsigned long>("ID").value_or(0);
     auto client = app().getDbClient();
-    auto result = co_await client->execSqlCoro("SELECT * FROM journals WHERE owner_id = ?;", user_id);
+    auto result = co_await client->execSqlCoro("SELECT * FROM journals WHERE active = 1 and owner_id = ?;", user_id);
 
     //? Add more info to the journal (Last Entrie Date, Avg stats, etc.)
 
@@ -28,9 +28,8 @@ Task<HttpResponsePtr> Journals::get_all(HttpRequestPtr req) {
         Journal jr{
             .ID = row[0].as<unsigned long>(),
             .owner_id = row[1].as<unsigned long>(),
-            .name = row[2].as<std::string>(),
+            .is_active = row[2].as<bool>(),
             .type = row[3].as<std::string>(),
-            .description = row[4].as<std::string>()
         };
 
         jrs.push_back(jr);
@@ -63,7 +62,6 @@ Task<HttpResponsePtr> Journals::get_journal(HttpRequestPtr req, unsigned long &&
             .date = row[2].as<std::string>(),
             .total_protein = row[3].as<float>(),
             .total_calories = row[4].as<float>(),
-            // .items = std::vector<Item>
         };
 
         ents.push_back(ent);

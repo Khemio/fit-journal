@@ -3,7 +3,6 @@
 %>
 <%c++
     auto journals=@@.get<std::vector<Journal>>("journals");
-    //std::cout << "journals size in csp: " << journals.size() << std::endl;
 %>
 
 <div class="container">
@@ -11,24 +10,15 @@
 
   <div class="container card-container">
 
-    <article id="new-item" class="card">
-          <div class="big-plus"></div>
-    </article>
-
-    <!-- <%c++ if(journals.size()>0){%> -->
-
       <%c++ for(const auto& jr : journals){%>
         <article id="journal-item" class="card" 
           hx-get="/journals/{%jr.ID%}"
           hx-swap="innerHTML"
           hx-target="main">
-          <!-- <div>{%jr.ID%}</div> -->
-          <h3>{%jr.name%}</h3>
-          <div>{%jr.type%}</div>
+          <h3 style="text-transform: capitalize;">{%jr.type%} Journal</h3>
+          <div>Journal type: {%jr.type%}</div>
         </article>
       <%c++}%>
-
-    <!-- <%c++ }%> -->
 
   </div>
 </div>
