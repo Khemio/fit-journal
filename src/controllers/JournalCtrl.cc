@@ -47,7 +47,6 @@ Task<HttpResponsePtr> Journals::get_journal(HttpRequestPtr req, unsigned long &&
     HttpViewData data;
     std::vector<Entry> ents;
 
-    // auto user_id = req->session()->getOptional<unsigned long>("ID").value_or(0);
     auto client = app().getDbClient();
 
     auto query = R"(SELECT * FROM food_entries WHERE journal_id = $1
@@ -129,8 +128,6 @@ Task<HttpResponsePtr> Journals::create_entry(HttpRequestPtr req, unsigned long &
 
     try {
         auto entry_date = req->getParameter("entry-date");
-        // auto entry_id = std::stoul(req->getParameter("entry-id"));
-        // std::cout << entry_date << std::endl;
 
         float total_protein = 0;
         float total_calories = 0;
@@ -155,8 +152,8 @@ Task<HttpResponsePtr> Journals::create_entry(HttpRequestPtr req, unsigned long &
 }
 
 Task<HttpResponsePtr> Journals::calc_food_item(HttpRequestPtr req, unsigned long &&food_id) {
+    std::cout << "calc_food_item(" << food_id << ')' << std::endl;
     auto amount = std::stof(req->getParameter("amount"));
-    std::cout << "calc_food_item(" << food_id << ')' << " with " << amount << std::endl;
     HttpViewData data;
 
     std::vector<Food> fds;
@@ -219,4 +216,8 @@ Task<HttpResponsePtr> Journals::add_food_item(HttpRequestPtr req, unsigned long 
     }
 
     co_return resp;
+}
+
+Task<HttpResponsePtr> Journals::delete_food_item(HttpRequestPtr req, unsigned long &&item_id) {
+
 }

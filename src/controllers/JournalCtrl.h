@@ -14,16 +14,14 @@ class Journals : public drogon::HttpController<Journals>
         METHOD_ADD(Journals::get_all, "/", Get, "AuthFilter");
 
         METHOD_ADD(Journals::get_journal, "/{journal_id}", Get, "AuthFilter");
-        // METHOD_ADD(Journals::create_journal, "/new", Post, "AuthFilter");
-        // METHOD_ADD(Journals::delete_journal, "/{journal_id}", Delete, "AuthFilter");
 
         METHOD_ADD(Journals::get_entry, "/{journal_id}/{entry_id}", Get, "AuthFilter");
         METHOD_ADD(Journals::create_entry, "/{journal_id}/new", Post, "AuthFilter");
         // METHOD_ADD(Journals::delete_entry, "/{journal_id}/{entry_id}", Delete, "AuthFilter");
 
-        METHOD_ADD(Journals::calc_food_item, "/new-food-item/calc/{}", Post, "AuthFilter");
-        METHOD_ADD(Journals::add_food_item, "/new-food-item/add/{}", Post, "AuthFilter");
-        // METHOD_ADD(Journals::delete_food_item, "/new-food-item/delete/{}", Delete, "AuthFilter");
+        METHOD_ADD(Journals::calc_food_item, "/food-item/calc/{}", Post, "AuthFilter");
+        METHOD_ADD(Journals::add_food_item, "/food-item/add/{}", Post, "AuthFilter");
+        METHOD_ADD(Journals::delete_food_item, "/food-item/delete/{}", Delete, "AuthFilter");
         METHOD_LIST_END
 
         Task<HttpResponsePtr> get_all(HttpRequestPtr req);
@@ -33,5 +31,6 @@ class Journals : public drogon::HttpController<Journals>
 
         Task<HttpResponsePtr> calc_food_item(HttpRequestPtr req, unsigned long &&food_id);
         Task<HttpResponsePtr> add_food_item(HttpRequestPtr req, unsigned long &&food_id);
+        Task<HttpResponsePtr> delete_food_item(HttpRequestPtr req, unsigned long &&item_id);
 
 };

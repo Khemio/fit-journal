@@ -7,7 +7,7 @@
 %>
 
 <div id="new-entry" hx-swap-oob="afterend:#food-table">
-<form id="entry-form" hx-post="/journals/new-food-item/add/{%fd.ID%}" hx-trigger="submit" hx-include="#entry-id">
+<form id="entry-form" hx-post="/journals/food-item/add/{%fd.ID%}" hx-trigger="submit" hx-include="#entry-id">
 
   <div>
     <label for="amount">Amount</label>
@@ -19,7 +19,7 @@
       hx-target="#food-items"
       hx-select="#food-items"
       hx-swap="outerHTML"
-      hx-post="journals/new-food-item/calc/{%fd.ID%}"
+      hx-post="journals/food-item/calc/{%fd.ID%}"
       hx-trigger="keyup changed delay:500ms"
       hx-select-oob="#new-entry"
       >
