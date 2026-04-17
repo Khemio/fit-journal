@@ -70,3 +70,14 @@ CREATE TRIGGER IF NOT EXISTS update_entry_totals
                 SELECT total_calories FROM food_entries WHERE entry_id = NEW.entry_id)
         WHERE entry_id = NEW.entry_id;
     END;
+
+CREATE TRIGGER IF NOT EXISTS update_entry_totals_on_delete
+    AFTER DELETE ON food_entry_items 
+    BEGIN
+        UPDATE food_entries SET 
+        total_protein = (SELECT total_protein FROM food_entries 
+            WHERE entry_id = OLD.entry_id) - OLD.protein,
+        total_calories = (SELECT total_calories FROM food_entries 
+            WHERE entry_id = OLD.entry_id) - OLD.calories
+        WHERE entry_id = OLD.entry_id;
+    END;

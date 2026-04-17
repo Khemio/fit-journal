@@ -204,7 +204,7 @@ Task<HttpResponsePtr> Journals::add_food_item(HttpRequestPtr req, unsigned long 
 
         auto result = co_await client->execSqlCoro(query, entry_id, name, quantity, quantity_type, protein, calories);
 
-        std::cout << "rows affected: " << result.affectedRows() << std::endl;
+        // std::cout << "rows affected: " << result.affectedRows() << std::endl;
 
         std::string header = "{\"itemAdded\":{\"target\" : \"#entries-table\"}}";
 
@@ -219,5 +219,24 @@ Task<HttpResponsePtr> Journals::add_food_item(HttpRequestPtr req, unsigned long 
 }
 
 Task<HttpResponsePtr> Journals::delete_food_item(HttpRequestPtr req, unsigned long &&item_id) {
+    std::cout << "delete_food_item(" << item_id << ")" << std::endl;
+    HttpResponsePtr resp = HttpResponse::newHttpResponse();
 
+    auto client = app().getDbClient();
+
+    try {
+        auto result = co_await client->execSqlCoro("DELETE FROM food_entry_items WHERE item_id = ?;", item_id);
+
+        std::cout << "rows affected: " << result.affectedRows() << std::endl;
+
+        std::string header = "{\"itemAdded\":{\"target\" : \"#entries-table\"}}"; //TODO: Use more appropriate name
+
+        resp->setStatusCode(k204NoContent);
+        resp->addHeader("HX-Trigger", header);
+    } catch (std::invalid_argument &e) {
+        resp->setStatusCode(k302Found);
+        resp->setBody("<script>alert('Failed to add: invalid input')</script>");
+    }
+
+    co_return resp;
 }
