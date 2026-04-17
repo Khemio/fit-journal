@@ -3,6 +3,8 @@
 
 #include "../dto/user.h"
 
+ //TODO: Add better error messaging for client because HTMX ignores body for 4XX and 5XX responses
+
 //? The better way of doing this might be through conditional templates
 void Users::Auth(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const std::string page) {
     HttpResponsePtr resp;
@@ -41,25 +43,28 @@ Task<HttpResponsePtr> Users::SignUp(HttpRequestPtr req) {
         resp->addHeader("HX-Location", "/");
 
     } catch (const orm::SqlError &e) {
-        //TODO: Add better error messaging for client because HTMX ignores body for 4XX and 5XX responses
         if (e.extendedErrcode() == 2067) {
             resp->setStatusCode(k409Conflict);
             resp->addHeader("HX-Location", "/");
-            // resp->setBody("<script>window.location.href = \"/\";alert('Username taken');</script>");
+
             co_return resp;
         }
         resp->setStatusCode(k500InternalServerError);
         resp->addHeader("HX-Location", "/");
-        // resp->setBody("<script>window.location.href = \"/\";alert('Something went wrong');</script>");
     }
 
     co_return resp;
 }
 
+//TODO: Invalid logins seem to be working, look into it
 Task<HttpResponsePtr> Users::SignIn(HttpRequestPtr req) {
+
     HttpResponsePtr resp = HttpResponse::newHttpResponse();
     std::string user = req->getParameter("user");
     std::string passwd = req->getParameter("passwd");
+
+    std::cout << "user: " << user << std::endl;
+    std::cout << "password: " << passwd << std::endl;
 
     auto client = app().getDbClient();
     auto result = co_await client->execSqlCoro("SELECT * FROM users WHERE username = ?;", user);
@@ -72,11 +77,12 @@ Task<HttpResponsePtr> Users::SignIn(HttpRequestPtr req) {
             req->session()->insert("loggedIn", true);
             req->session()->insert("ID", user.ID);
             req->session()->insert("username", user.username);
-            resp->setBody("<script>window.location.href = \"/\";</script>");
+            resp->addHeader("HX-Location", "{\"path\":\"/journals\", \"target\":\"main\"}");
+
         } 
     }else {
         resp->setStatusCode(k401Unauthorized);
-        resp->setBody("<script>window.location.href = \"/\";</script>");
+        resp->addHeader("HX-Location", "/");
     }
     co_return resp;
 }
@@ -86,6 +92,7 @@ void Users::SignOut(const HttpRequestPtr &req, std::function<void(const HttpResp
     req->session()->erase("loggedIn");
     req->session()->erase("ID");
     req->session()->erase("username");
-    resp->setBody("<script>window.location.href = \"/\";</script>");
+    resp->addHeader("HX-Location", "/");
+
     callback(resp);
 }
