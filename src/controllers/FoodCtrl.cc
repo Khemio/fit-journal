@@ -5,15 +5,7 @@
 Task<std::vector<Food>> list_foods() {
     std::vector<Food> fds;
     auto client = app().getDbClient();
-
-    // std::cout << "Before query" << std::endl;
-    // auto test_res = co_await client->execSqlCoro("PRAGMA foreign_keys;");
-    // std::cout << "result: " << test_res[0][0].as<int>() << std::endl;
-
-    // co_await client->execSqlCoro("PRAGMA foreign_keys = ON;");
-    // test_res = co_await client->execSqlCoro("PRAGMA foreign_keys;");
-    // std::cout << "result: " << test_res[0][0].as<int>() << std::endl;
-
+    
     auto result = co_await client->execSqlCoro("SELECT * FROM foods;");
 
     for (auto row : result) {
