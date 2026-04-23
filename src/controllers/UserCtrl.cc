@@ -10,9 +10,6 @@ void Users::Auth(const HttpRequestPtr &req, std::function<void(const HttpRespons
     HttpResponsePtr resp;
     HttpViewData data;
 
-    // std::cout << "qwerty: " << bcrypt::generateHash("qwerty") << std::endl;
-    // std::cout << "password123: " << bcrypt::generateHash("password123") << std::endl;
-
     bool loggedIn = req->session()->getOptional<bool>("loggedIn").value_or(false);
     if (loggedIn)
     {
