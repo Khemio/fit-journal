@@ -2,8 +2,29 @@
 #include "bcrypt-hash.h"
 
 #include "../dto/user.h"
+// #include "../database/DbManager.h"
 
- //TODO: Add better error messaging for client because HTMX ignores body for 4XX and 5XX responses
+Task<void> add_user(std::string user, std::string hash) {
+    auto client = app().getDbClient();
+    co_await client->execSqlCoro(
+        "INSERT INTO users (username, password) VALUES ($1, $2);", 
+        user, hash);
+}
+
+Task<User> get_user(std::string user) {
+    auto client = app().getDbClient();
+    auto result = co_await client->execSqlCoro("SELECT * FROM users WHERE username = ?;", user);
+
+    if (result.size() > 0) { //? Size probably should be 1 for a singular row
+        User user{result[0]};
+        co_return user;
+    } else {
+        co_return User{};
+    }
+
+}
+
+//TODO: Add better error messaging for client because HTMX ignores body for 4XX and 5XX responses
 
 //? The better way of doing this might be through conditional templates
 void Users::Auth(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, const std::string page) {
@@ -28,13 +49,11 @@ Task<HttpResponsePtr> Users::SignUp(HttpRequestPtr req) {
 
     std::string user = req->getParameter("user");
     std::string passwd = req->getParameter("passwd");
-
-    auto client = app().getDbClient();
+    auto hash =  bcrypt::generateHash(passwd);
 
     try {
-        auto result = co_await client->execSqlCoro(
-            "INSERT INTO users (username, password) VALUES ($1, $2);", 
-            user, bcrypt::generateHash(passwd));
+        co_await  add_user(user, hash);
+        // co_await  DbManager::add_user(user, hash);
 
         resp->setStatusCode(k201Created);
         resp->addHeader("HX-Location", "/");
@@ -57,17 +76,16 @@ Task<HttpResponsePtr> Users::SignUp(HttpRequestPtr req) {
 Task<HttpResponsePtr> Users::SignIn(HttpRequestPtr req) {
 
     HttpResponsePtr resp = HttpResponse::newHttpResponse();
-    std::string user = req->getParameter("user");
+    std::string username = req->getParameter("user");
     std::string passwd = req->getParameter("passwd");
 
-    std::cout << "user: " << user << std::endl;
+    std::cout << "user: " << username << std::endl;
     std::cout << "password: " << passwd << std::endl;
 
-    auto client = app().getDbClient();
-    auto result = co_await client->execSqlCoro("SELECT * FROM users WHERE username = ?;", user);
+    auto user = co_await get_user(username);
+    // auto user = co_await  DbManager::get_user(username);
 
-    if (result.size() > 0) { //? Size probably should be 1 for a singular row
-        User user{result[0]};
+    if (user.ID > 0) {
 
         if (bcrypt::validatePassword(passwd,user.password))
         {
