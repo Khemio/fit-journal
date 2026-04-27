@@ -13,7 +13,6 @@ Task<void> add_user(std::string user, std::string hash) {
         user, hash);
 }
 
-// Task<User> get_user(std::string user) {
 Task<std::optional<User>> get_user(std::string user) {
     auto client = app().getDbClient();
     auto result = co_await client->execSqlCoro("SELECT * FROM users WHERE username = ?;", user);
@@ -22,7 +21,6 @@ Task<std::optional<User>> get_user(std::string user) {
         User user{result[0]};
         co_return user;
     } else {
-        // co_return User{};
         co_return std::nullopt;
     }
 
