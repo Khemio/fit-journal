@@ -1,3 +1,5 @@
+#include <optional>
+
 #include "UserCtrl.h"
 #include "bcrypt-hash.h"
 
@@ -11,7 +13,8 @@ Task<void> add_user(std::string user, std::string hash) {
         user, hash);
 }
 
-Task<User> get_user(std::string user) {
+// Task<User> get_user(std::string user) {
+Task<std::optional<User>> get_user(std::string user) {
     auto client = app().getDbClient();
     auto result = co_await client->execSqlCoro("SELECT * FROM users WHERE username = ?;", user);
 
@@ -19,7 +22,8 @@ Task<User> get_user(std::string user) {
         User user{result[0]};
         co_return user;
     } else {
-        co_return User{};
+        // co_return User{};
+        co_return std::nullopt;
     }
 
 }
@@ -85,13 +89,15 @@ Task<HttpResponsePtr> Users::SignIn(HttpRequestPtr req) {
     auto user = co_await get_user(username);
     // auto user = co_await  DbManager::get_user(username);
 
-    if (user.ID > 0) {
+    if (user) {
 
-        if (bcrypt::validatePassword(passwd,user.password))
+        if (bcrypt::validatePassword(passwd,user->password))
         {
             req->session()->insert("loggedIn", true);
-            req->session()->insert("ID", user.ID);
-            req->session()->insert("username", user.username);
+            req->session()->insert("ID", user->ID);
+            req->session()->insert("username", user->username);
+
+            resp->setStatusCode(k200Ok);
             resp->addHeader("HX-Location", "{\"path\":\"/journals\", \"target\":\"main\"}");
 
         } 
@@ -107,6 +113,8 @@ void Users::SignOut(const HttpRequestPtr &req, std::function<void(const HttpResp
     req->session()->erase("loggedIn");
     req->session()->erase("ID");
     req->session()->erase("username");
+
+    resp->setStatusCode(k200Ok);
     resp->addHeader("HX-Location", "/");
 
     callback(resp);
