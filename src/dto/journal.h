@@ -9,6 +9,13 @@ struct Journal {
     bool is_active;
     std::string type;
 
+    Journal() {
+        ID = 0;
+        owner_id = 0;
+        is_active = false;
+        type = "";
+    }
+
     Journal(Row row) {
         ID = row[0].as<unsigned long>();
         owner_id = row[1].as<unsigned long>();
