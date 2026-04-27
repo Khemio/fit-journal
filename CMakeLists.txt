@@ -36,6 +36,7 @@ aux_source_directory(src/controllers CTL_SRC)
 aux_source_directory(src/filters FILTER_SRC)
 aux_source_directory(src/plugins PLUGIN_SRC)
 aux_source_directory(src/models MODEL_SRC)
+aux_source_directory(src/database DB_MNG_SRC)
 aux_source_directory(${CMAKE_CURRENT_BINARY_DIR}/views_gen VIEWS_GEN_SRC)
 
 add_custom_command(
@@ -63,6 +64,7 @@ target_sources(${PROJECT_NAME}
                 ${SRC_DIR}
                 ${VIEWS_GEN_SRC}
                 ${CTL_SRC}
+                ${DB_MNG_SRC}
                 ${FILTER_SRC}
                 ${MODEL_SRC}
                 ${PLUGIN_SRC})
