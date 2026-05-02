@@ -12,6 +12,10 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+# set(BUILD_SHARED_LIBS OFF)
+# set(CMAKE_EXE_LINKER_FLAGS "-static")
+
 add_subdirectory(vendor/Bcrypt.cpp)
 
 add_executable(${PROJECT_NAME} src/main.cc)
@@ -70,8 +74,8 @@ target_sources(${PROJECT_NAME}
                 ${PLUGIN_SRC})
 # ##############################################################################
 # uncomment the following line for dynamically loading views 
-set_property(TARGET ${PROJECT_NAME} PROPERTY ENABLE_EXPORTS ON)
+# set_property(TARGET ${PROJECT_NAME} PROPERTY ENABLE_EXPORTS ON)
 
 # ##############################################################################
 
-add_subdirectory(test)
+# add_subdirectory(test)

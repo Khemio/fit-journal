@@ -57,7 +57,7 @@
         ],
         "max_connections": 100000,
         "max_connections_per_ip": 0,
-        "load_dynamic_views": true,
+        "load_dynamic_views": false,
         "dynamic_views_path": [
             "./src/views"
         ],
