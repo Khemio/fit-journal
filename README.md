@@ -2,6 +2,10 @@
 
 This is a health and fitness journaling web application. It supports multiple users and allows tracking of food intake.
 
+## Build Info
+
+This application relies on Drogon framework that dinamically links some of it's dependencies. For this project I used MSYS2 UCRT, downloaded dependecies and built Drogon from source. Not sure how to set it up in other environments. For now I created a Dockerfile and an [image](https://hub.docker.com/r/khemio/fitness-journal). Image is unoptimized and takes up around 1.5 GB.
+
 ## Thecnical Info
 
 This is a server driven application, made with C++ framework Drogon. Front End is server rendered with Drogon CSP (C++ Server Pages) and styled with Pico CSS. Interactivity and server communication achieved with HTMX. Database of choice is SQLite.
