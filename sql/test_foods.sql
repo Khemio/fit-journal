@@ -24,18 +24,24 @@ INSERT INTO foods (food_name, food_quantity, food_quantity_type, protein, calori
     VALUES ('Milk Cofee', 1, 'cup', 0.9, 13.2);
 INSERT INTO foods (food_name, food_quantity, food_quantity_type, protein, calories)
     VALUES ('Peas', 100, 'g', 5, 74);
+INSERT INTO foods (food_name, food_quantity, food_quantity_type, protein, calories)
+    VALUES ('Bread', 100, 'g', 9.4, 271);
+INSERT INTO foods (food_name, food_quantity, food_quantity_type, protein, calories)
+    VALUES ('Bread', 1, 'pc', 2.3, 68);
+INSERT INTO foods (food_name, food_quantity, food_quantity_type, protein, calories)
+    VALUES ('Rice Pudding (Phistachio)', 100, 'g', 3.2, 108);
+INSERT INTO foods (food_name, food_quantity, food_quantity_type, protein, calories)
+    VALUES ('Pork (Fatty)', 100, 'g ', 23, 290);
+INSERT INTO foods (food_name, food_quantity, food_quantity_type, protein, calories)
+    VALUES ('Pork (Lean)', 100, 'g', 22, 127);
+INSERT INTO foods (food_name, food_quantity, food_quantity_type, protein, calories)
+    VALUES ('Protein Powder', 1, 'htbs', 10, 54);
 
--- Bread | 1pc(~25g) | 9.4 | 271 |
--- Protein Powder | 1htbs(~14g) | 21 | 108 |
--- Rice Pudding (Phistachio) | 100g | 3.2 | 108 | 
--- Pork (Fatty) | 100g | 23 | 290 |
--- Pork (Lean) | 100g |  22 | 127 |
 -- Veggie Mix | 100g | 1.5 | 27 |
 -- Turkey (Lean Minced) | 100g | 22 | 160 |
 -- Oats | 100g | 13.5 | 372 |
 -- Rice (Cooked) | 100g | 2.6| 130 |
 -- Kefir | 100ml | 3 | 59 |
-
 -- Hashbrowns | 6pc(300g) | 2.4 | 202(606) |
 -- Cheese (Slices) | 3pc(~45g) | 26 | 339 |
 -- Kolbasa (Slices) | 2pc(~30g) | 13.3 | 233 |

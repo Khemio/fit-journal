@@ -4,7 +4,6 @@
 #include "bcrypt-hash.h"
 
 #include "../dto/user.h"
-// #include "../database/DbManager.h"
 
 Task<void> add_user(std::string user, std::string hash) {
     auto client = app().getDbClient();
@@ -95,7 +94,7 @@ Task<HttpResponsePtr> Users::SignIn(HttpRequestPtr req) {
             req->session()->insert("ID", user->ID);
             req->session()->insert("username", user->username);
 
-            resp->setStatusCode(k200Ok);
+            resp->setStatusCode(k200OK);
             resp->addHeader("HX-Location", "{\"path\":\"/journals\", \"target\":\"main\"}");
 
         } 
@@ -112,7 +111,7 @@ void Users::SignOut(const HttpRequestPtr &req, std::function<void(const HttpResp
     req->session()->erase("ID");
     req->session()->erase("username");
 
-    resp->setStatusCode(k200Ok);
+    resp->setStatusCode(k200OK);
     resp->addHeader("HX-Location", "/");
 
     callback(resp);
