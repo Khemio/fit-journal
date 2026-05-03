@@ -2,23 +2,49 @@
 
 using namespace drogon;
 
+class AuthService {
+    public:
+        virtual void authenticate() {};
+        virtual void authorize() {};
+};
+
+class SessionAuthService : public AuthService {
+    public:
+        SessionAuthService(const HttpRequestPtr req) : req(req) {};
+        void authenticate() override {
+            isAuthenticated =  req->session()->getOptional<bool>("loggedIn").value_or(false);
+        }
+        virtual void authorize() override {isValid = isAuthenticated;};
+
+        bool isValid;
+
+    private:
+        bool isAuthenticated;
+        const HttpRequestPtr req;
+};
+
+class AuthServiceFactory {
+    public:
+        static SessionAuthService getSessionAuthService(const HttpRequestPtr req) {
+            return SessionAuthService{req};
+        };
+};
+
 void AuthFilter::doFilter(const HttpRequestPtr &req,
                          FilterCallback &&fcb,
                          FilterChainCallback &&fccb)
 {
-    //Edit your logic here
-    bool loggedIn = req->session()->getOptional<bool>("loggedIn").value_or(false);
-    if (loggedIn)
+    auto auth = AuthServiceFactory::getSessionAuthService(req);
+    auth.authenticate();
+    auth.authorize();
+    if (auth.isValid)
     {
         fccb();
         return;
     }
-    //Check failed  
-    // auto res = drogon::HttpResponse::newHttpResponse();
-    // res->setStatusCode(k500InternalServerError);
-    // auto resp = HttpResponse::newHttpViewResponse("LoginPage");
     HttpResponsePtr resp = HttpResponse::newHttpResponse();
     resp->setStatusCode(k401Unauthorized);
-    resp->setBody("<script>window.location.href = \"/\";</script>");
+    resp->addHeader("HX-Location", "/");
+    
     fcb(resp);
 }

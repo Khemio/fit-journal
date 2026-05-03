@@ -1,10 +1,4 @@
-#include <print>
 #include <iostream>
-
-// #include <windows.h>
-// #include "../../vendor/Bcrypt.cpp/include/bcrypt.h"
-// #include "../../vendor/Bcrypt.cpp/include/bcrypt-hash.h"
-// #pragma comment (lib, "bcrypt.lib")
 
 #include <drogon/drogon.h>
 

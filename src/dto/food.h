@@ -6,11 +6,19 @@ using namespace drogon::orm;
 struct Food {
     unsigned long ID;
     std::string name;
-    std::string name_type;
     float quantity;
     std::string quantity_type ;
     float protein;
     float calories;
+
+    Food() {
+        ID = 0;
+        name = "";
+        quantity = 0;
+        quantity_type = "";
+        protein = 0;
+        calories = 0;
+    }
 
     Food(Row row) {
         ID = row[0].as<unsigned long>();

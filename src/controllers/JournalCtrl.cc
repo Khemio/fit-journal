@@ -20,7 +20,7 @@ Task<HttpResponsePtr> Journals::get_all(HttpRequestPtr req) {
 
     auto user_id = req->session()->getOptional<unsigned long>("ID").value_or(0);
     auto client = app().getDbClient();
-    auto result = co_await client->execSqlCoro("SELECT * FROM journals WHERE active = 1 and owner_id = ?;", user_id);
+    auto result = co_await client->execSqlCoro("SELECT * FROM journals WHERE is_active = 1 and owner_id = ?;", user_id);
 
     //? Add more info to the journal (Last Entrie Date, Avg stats, etc.)
 

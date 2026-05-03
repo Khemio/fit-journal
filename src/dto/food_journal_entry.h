@@ -10,6 +10,14 @@ struct Entry {
     float total_protein;
     float total_calories;
 
+    Entry() {
+        entry_id = 0;
+        journal_id = 0;
+        date = "";
+        total_protein = 0;
+        total_calories = 0;
+    }
+
     Entry(Row row) {
         entry_id = row[0].as<unsigned long>();
         journal_id = row[1].as<unsigned long>();
@@ -27,6 +35,16 @@ struct Item {
     std::string quantity_type ;
     float protein;
     float calories;
+
+    Item() {
+        item_id = 0;
+        entry_id = 0;
+        name = "";
+        quantity = 0;
+        quantity_type = "";
+        protein = 0;
+        calories = 0;
+    }
 
     Item(Row row) {
         item_id = row[0].as<unsigned long>();
