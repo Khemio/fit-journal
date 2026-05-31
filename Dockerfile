@@ -10,8 +10,9 @@ COPY static/ ./static
 COPY vendor/ ./vendor
 COPY CMakeLists.txt .
 COPY config.json .
+COPY db/ ./db
 
-# Compile the C++ code statically to ensure it doesn't depend on runtime libraries
+# Compile the C++ code 
 RUN mkdir build && cd build && mkdir logs; \
     cmake .. && cmake --build .; \
     cp -r ../src/views build/

@@ -9,7 +9,7 @@
     "db_clients": [
         {
             "rdbms": "sqlite3",
-            "filename":"journal.db",
+            "filename":"../db/journal.db",
             "is_fast": false,
             "number_of_connections": 1,
             "timeout": -1.0,
