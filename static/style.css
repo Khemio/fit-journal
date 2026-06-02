@@ -31,3 +31,9 @@
     display: block;
     content: "\2795";
   }
+
+.header-line {
+  display: flex;
+  justify-content: space-between;
+
+}

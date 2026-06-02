@@ -40,6 +40,8 @@ Task<HttpResponsePtr> Journals::get_journal(HttpRequestPtr req, unsigned long &&
     std::cout << "journals: get_journal()" << std::endl;
     HttpViewData data;
     std::vector<Entry> ents;
+    unsigned long journal_protein = 0;
+    unsigned long journal_calories = 0;
 
     auto client = app().getDbClient();
 
@@ -50,11 +52,15 @@ Task<HttpResponsePtr> Journals::get_journal(HttpRequestPtr req, unsigned long &&
 
     for (auto row : result) {
         Entry ent{row};
+        journal_protein += ent.total_protein;
+        journal_calories += ent.total_calories;
         ents.push_back(ent);
     }
 
     data.insert("journal_id", journal_id);
     data.insert("entries", ents);
+    data.insert("journal_protein", journal_protein);
+    data.insert("journal_calories", journal_calories);
 
     auto resp = HttpResponse::newHttpViewResponse("FoodJournal", data);
 
