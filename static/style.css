@@ -1,12 +1,15 @@
 .card-container {
     display: flex;
     gap: 2rem;
+    flex-wrap: wrap;
 }
 
 .card {
     display: flex;
+    flex: 1 1 0;
     flex-direction: column;
     max-width: max-content;
+    min-width: 17%;
     text-align: center;
     padding: 1rem 2rem;
     border-radius: 10px;

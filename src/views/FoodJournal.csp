@@ -29,8 +29,8 @@
 
   <div class="container card-container">
 
-    <article id="new-item" class="card">
-          <div class="big-plus" data-target="new-entry-modal" hx-on:click="toggleModal(event)"></div>
+    <article id="new-item" class="card" data-target="new-entry-modal" hx-on:click="toggleModal(event)">
+          <div class="big-plus"></div>
     </article>
 
       <%c++ for(const auto& e : entries){%>
