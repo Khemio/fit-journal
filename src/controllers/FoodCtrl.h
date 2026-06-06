@@ -13,11 +13,13 @@ class Foods : public HttpController<Foods>
     METHOD_ADD(Foods::get_some, "/search?food_name={1}", Get);
     METHOD_ADD(Foods::get_some, "/name/{}", Get);
     METHOD_ADD(Foods::get_one, "/id/{}", Get);
+    METHOD_ADD(Foods::add_food, "/add", Post);
 
     METHOD_LIST_END
 
     Task<HttpResponsePtr> get_all(HttpRequestPtr req);
     Task<HttpResponsePtr> get_some(HttpRequestPtr req, std::string &&name);
     Task<HttpResponsePtr> get_one(HttpRequestPtr req, unsigned long &&food_id);
+    Task<HttpResponsePtr> add_food(HttpRequestPtr req);
 };
 

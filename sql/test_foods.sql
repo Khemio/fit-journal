@@ -126,5 +126,8 @@ INSERT INTO foods (food_name, food_quantity, food_quantity_type, protein, calori
         ('Toffifee', 1, 'pc', 0.5, 44),
         ('Protein Bread', 100, 'g', 10, 220),
         ('Fresh Pizza', 1, 'pizza', 40, 2000),
-        ('Bolonese sauce', 100, 'g', 13, 200);
+        ('Bolonese sauce', 100, 'g', 13, 200),
+        ('Cherry Beer (Pecsi)', 1, 'can', 0 , 220),
+        ('Quadrupel Beer', 1, 'bottle', 0 , 300),
+        ('Cointreau', 100, 'ml', 0 , 310);
         
