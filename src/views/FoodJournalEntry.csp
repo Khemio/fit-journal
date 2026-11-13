@@ -12,7 +12,9 @@
 
   <nav>
     <ul>
-        <li><h2>Foods</h2></li>
+        <li hx-get="/journals/{%journal_id%}" hx-swap="innerHTML" hx-target="main">
+          <h2>Foods</h2>
+        </li>
     </ul>
     <ul>
         <li><span>Total Protein: {%total_protein%}g</span></li>

@@ -1,6 +1,5 @@
 # My additions
 build/
-docs/
 *.example
 sql/journal.txt
 *.db
